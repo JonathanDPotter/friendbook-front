@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
 
-const Google = () => {
+const Login = () => {
   const [name, setName] = useState("");
 
   const onSignIn = (googleUser: any) => {
@@ -23,4 +22,4 @@ const Google = () => {
   );
 };
 
-export default Google;
+export default Login;
