@@ -27,7 +27,7 @@ const Login = () => {
     event.preventDefault();
     const response = await api.login(formState);
 
-    if (response.data.success === false) {
+    if (!response.data.success) {
       window.alert(response.data.message);
     } else {
       console.log(response.data);
@@ -41,14 +41,32 @@ const Login = () => {
     setFormState({ ...formState, [id]: value });
   };
 
-  const responseGoogle = (
+  const responseGoogle = async (
     response: GoogleLoginResponse | GoogleLoginResponseOffline
   ) => {
     if ("profileObj" in response) {
-      const { name, googleId } = response.profileObj;
-      console.log(name, googleId);
-    } else {
-      console.log(response.code);
+      const { email, googleId, givenName, familyName, imageUrl } =
+        response.profileObj;
+
+      const newUser = {
+        firstName: givenName,
+        lastName: familyName,
+        email,
+        image: imageUrl,
+        password: googleId,
+        gender: "custom",
+      };
+
+      await api.register(newUser);
+
+      const loginResponse = await api.login({ email, password: googleId });
+
+      if (!loginResponse.data.success) {
+        window.alert(loginResponse.data.message);
+      } else {
+        console.log(loginResponse.data);
+        navigate("/");
+      }
     }
   };
 

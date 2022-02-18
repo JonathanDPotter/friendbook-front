@@ -4,6 +4,7 @@ export interface InewUser {
   email: string;
   password: string;
   gender: string;
+  image?: string;
 }
 
 export interface Icredentials {

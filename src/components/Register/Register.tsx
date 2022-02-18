@@ -1,4 +1,5 @@
 import React, { FormEvent, useState, FC } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import api from "../../api";
 import "./Register.scss";
 
@@ -7,6 +8,8 @@ interface IregisterProps {
 }
 
 const Register: FC<IregisterProps> = ({ close }) => {
+  const navigate = useNavigate();
+
   const months = [
     "January",
     "February",
@@ -52,8 +55,14 @@ const Register: FC<IregisterProps> = ({ close }) => {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     const response = await api.register(formState);
-    window.alert(response.data.message);
-    close();
+
+    if (!response.data.success) {
+      window.alert(response.data.message);
+    } else {
+      const loginResponse = await api.login({ email, password });
+      console.log(loginResponse.data.token);
+      navigate("/");
+    }
   };
 
   return (
