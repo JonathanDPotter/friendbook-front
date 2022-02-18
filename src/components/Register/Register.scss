@@ -6,4 +6,63 @@
   height: 90vh;
   width: 100vw;
   @include theme.flex-column-ajcenter;
+
+  .card {
+    position: relative;
+    width: 70% !important;
+    height: 70% !important;
+    padding: 1rem;
+    @include theme.flex-column-acenter;
+
+    .close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    form {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      @include theme.flex-column-acenter;
+
+      input {
+        width: 100%;
+        height: 2rem;
+        border: 1px solid lightgrey !important;
+        background-color: whitesmoke;
+      }
+
+      label {
+        width: 100%;
+        font-size: 0.8rem;
+      }
+      .names {
+        display: flex;
+        width: 100%;
+
+        input {
+          width: 50%;
+        }
+      }
+
+      .birthday,
+      .gender {
+        display: flex;
+        justify-content: space-evenly;
+        width: 100%;
+
+        input {
+          border: 1px solid lightgrey;
+          border-radius: 0.2rem;
+          width: fit-content;
+        }
+      }
+    }
+    p {
+      font-size: 0.7rem;
+    }
+  }
 }

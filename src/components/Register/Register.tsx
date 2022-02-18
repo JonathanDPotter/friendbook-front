@@ -1,4 +1,5 @@
 import React, { FormEvent, useState, FC } from "react";
+import api from "../../api";
 import "./Register.scss";
 
 interface IregisterProps {
@@ -48,9 +49,10 @@ const Register: FC<IregisterProps> = ({ close }) => {
     setFormState({ ...formState, [id]: value });
   };
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    console.table(formState);
+    const response = await api.register(formState);
+    window.alert(response.data.message);
     close();
   };
 
@@ -59,47 +61,57 @@ const Register: FC<IregisterProps> = ({ close }) => {
       <div className="card">
         <h1>Sign Up</h1>
         <p>It's quick and easy.</p>
+        <span onClick={close} className="close">
+          X
+        </span>
         <hr />
         <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="firstName"
-            id="firstName"
-            onChange={handleChange}
-            value={firstName}
-            placeholder="first name"
-            required
-          />
-          <input
-            type="text"
-            name="lastName"
-            id="lastName"
-            onChange={handleChange}
-            value={lastName}
-            placeholder="last name"
-            required
-          />
+          <div className="names">
+            <input
+              type="text"
+              name="firstName"
+              id="firstName"
+              className="first-name"
+              onChange={handleChange}
+              value={firstName}
+              placeholder="first name"
+              required
+            />
+            <input
+              type="text"
+              name="lastName"
+              id="lastName"
+              className="last-name"
+              onChange={handleChange}
+              value={lastName}
+              placeholder="last name"
+              required
+            />
+          </div>
           <input
             type="email"
             name="email"
             id="email"
+            className="email"
             onChange={handleChange}
             value={email}
             placeholder="email"
+            autoComplete="new-password"
             required
           />
           <input
             type="password"
             name="pasword"
             id="password"
+            className="password"
             onChange={handleChange}
             value={password}
             placeholder="new password"
             autoComplete="new password"
             required
           />
-          <div className="birthday">
-            <label htmlFor="birthday">Birthday</label>
+          <label htmlFor="birthday">Birthday</label>
+          <div className="birthday" id="birthday">
             <select name="month" id="month">
               {months &&
                 months.map((month) => {
@@ -131,7 +143,8 @@ const Register: FC<IregisterProps> = ({ close }) => {
                 })}
             </select>
           </div>
-          <div className="gender">
+          <label htmlFor="gender">Gender</label>
+          <div className="gender" id="gender">
             <div className="labelinput">
               <label htmlFor="female">Female</label>
               <input
