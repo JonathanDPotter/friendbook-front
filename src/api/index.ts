@@ -1,9 +1,12 @@
 import axios from "axios";
-import { InewUser } from "../interfaces/user";
+import { InewUser, Icredentials } from "../interfaces/user";
 
 const apiBaseURL = "http://localhost:1337";
 
 const register = (newUser: InewUser) =>
   axios.post(apiBaseURL + "/api/users/register", newUser);
 
-export default { register };
+  const login = (credentials: Icredentials) =>
+    axios.post(apiBaseURL + "/api/users/login", credentials);
+
+export default { register, login };

@@ -1,14 +1,18 @@
 import React, { FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   GoogleLogin,
   GoogleLoginResponse,
   GoogleLoginResponseOffline,
 } from "react-google-login";
+import api from "../../api";
 import Register from "../Register/Register";
 // styles
 import "./Login.scss";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const initialFormState = {
     email: "",
     password: "",
@@ -19,9 +23,16 @@ const Login = () => {
 
   const [showRegister, setShowRegister] = useState(false);
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    console.table(formState);
+    const response = await api.login(formState);
+
+    if (response.data.success === false) {
+      window.alert(response.data.message);
+    } else {
+      console.log(response.data);
+      navigate("/");
+    }
   };
 
   const handleChange = ({

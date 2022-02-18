@@ -5,3 +5,8 @@ export interface InewUser {
   password: string;
   gender: string;
 }
+
+export interface Icredentials {
+  email: string;
+  password: string;
+}
