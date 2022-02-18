@@ -1,1 +1,12 @@
-$blue: #1B74E4;
+$blue: #1b74e4;
+
+@mixin flex-column-acenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@mixin flex-column-ajcenter {
+  @include flex-column-acenter;
+  justify-content: center;
+}

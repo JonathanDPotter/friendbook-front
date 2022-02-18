@@ -1,0 +1,36 @@
+@use "../../theme";
+
+.login {
+  @include theme.flex-column-acenter;
+  justify-content: center;
+  background-color: whitesmoke;
+
+  .card {
+    height: 50vh;
+    width: 50vh;
+    max-width: 800px;
+    border-radius: 0.5rem;
+    box-shadow: 0.2rem 0.2rem 0.2rem 0.2rem lightgray;
+    display: flex;
+    @include theme.flex-column-acenter;
+    justify-content: space-evenly;
+    background-color: white;
+
+    form {
+      height: 50%;
+      width: 90%;
+      @include theme.flex-column-acenter;
+      justify-content: space-around;
+
+      .label-input {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+
+        input: {
+          width: 70%;
+        }
+      }
+    }
+  }
+}

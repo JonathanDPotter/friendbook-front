@@ -1,8 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Ruda&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Ruda&display=swap");
+
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
-  font-family: 'Ruda', sans-serif;
+  font-family: "Ruda", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -10,4 +14,15 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.page {
+  min-height: 90vh;
+  width: 100vw;
+}
+
+button, input {
+  font-family: inherit;
+  border: none;
+  border-radius: .2rem;
 }
