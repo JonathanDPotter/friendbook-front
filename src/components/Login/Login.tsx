@@ -5,13 +5,20 @@ import {
   GoogleLoginResponse,
   GoogleLoginResponseOffline,
 } from "react-google-login";
-import api from "../../api";
+// components
 import Register from "../Register/Register";
+// utils
+import api from "../../api";
+import { useAppDispatch } from "../../store/hooks";
 // styles
 import "./Login.scss";
+import { setToken, setUser } from "../../store/authSlice";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
   const initialFormState = {
     email: "",
@@ -30,7 +37,8 @@ const Login = () => {
     if (!response.data.success) {
       window.alert(response.data.message);
     } else {
-      console.log(response.data);
+      await dispatch(setToken(response.data.token));
+      await dispatch(setUser(response.data.userName));
       navigate("/");
     }
   };
@@ -64,7 +72,8 @@ const Login = () => {
       if (!loginResponse.data.success) {
         window.alert(loginResponse.data.message);
       } else {
-        console.log(loginResponse.data);
+        await dispatch(setToken(loginResponse.data.token));
+        await dispatch(setUser(loginResponse.data.userName));
         navigate("/");
       }
     }
@@ -85,7 +94,7 @@ const Login = () => {
               id="email"
               name="email"
               onChange={handleChange}
-              value={email}
+              value={email.toLowerCase()}
             />
           </div>
           <div className="label-input">
@@ -101,13 +110,15 @@ const Login = () => {
           <input type="submit" value="Log In" />
         </form>
         <div className="or">or</div>
-        <GoogleLogin
-          clientId="1085757713654-5hllkudhdbui81f0tkj43ne5cr79jqrj.apps.googleusercontent.com"
-          buttonText="Login"
-          onSuccess={responseGoogle}
-          onFailure={responseGoogle}
-          cookiePolicy={"single_host_origin"}
-        />
+        {clientId && (
+          <GoogleLogin
+            clientId={clientId}
+            buttonText="Login"
+            onSuccess={responseGoogle}
+            onFailure={responseGoogle}
+            cookiePolicy={"single_host_origin"}
+          />
+        )}
         <hr />
         <button onClick={() => setShowRegister(true)}>
           Create new account

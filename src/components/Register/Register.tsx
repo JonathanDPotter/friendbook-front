@@ -1,5 +1,5 @@
 import React, { FormEvent, useState, FC } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../../api";
 import "./Register.scss";
 
@@ -44,7 +44,7 @@ const Register: FC<IregisterProps> = ({ close }) => {
   };
 
   const [formState, setFormState] = useState(initialFormState);
-  const { firstName, lastName, email, password, gender } = formState;
+  const { firstName, lastName, email, password } = formState;
 
   const handleChange = ({
     currentTarget: { id, value },
@@ -103,7 +103,7 @@ const Register: FC<IregisterProps> = ({ close }) => {
             id="email"
             className="email"
             onChange={handleChange}
-            value={email}
+            value={email.toLowerCase()}
             placeholder="email"
             autoComplete="new-password"
             required

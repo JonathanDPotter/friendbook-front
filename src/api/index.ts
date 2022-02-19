@@ -6,7 +6,9 @@ const apiBaseURL = "http://localhost:1337";
 const register = (newUser: InewUser) =>
   axios.post(apiBaseURL + "/api/users/register", newUser);
 
-  const login = (credentials: Icredentials) =>
-    axios.post(apiBaseURL + "/api/users/login", credentials);
+const login = (credentials: Icredentials) =>
+  axios.post(apiBaseURL + "/api/users/login", credentials);
 
-export default { register, login };
+const api = { register, login };
+
+export default api;
