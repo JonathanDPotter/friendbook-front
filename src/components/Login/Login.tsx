@@ -56,6 +56,7 @@ const Login = () => {
   const responseGoogle = async (
     response: GoogleLoginResponse | GoogleLoginResponseOffline
   ) => {
+    console.log(response)
     if ("profileObj" in response) {
       const { email, googleId, givenName, familyName, imageUrl } =
         response.profileObj;

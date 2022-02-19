@@ -6,15 +6,17 @@ const Home = () => {
   const navigate = useNavigate();
 
   const { user } = useAppSelector((state) => state.auth);
-  
-  useEffect(() => {
-    if (!user) navigate("/login")
-  }, [user])
-  
 
-  return <div>{`Hello ${user ? user : "Guest"}`}
-    <button onClick={() => navigate("/logout")}>Log Out</button>
-  </div>;
+  useEffect(() => {
+    if (!user) navigate("/login");
+  }, [user]);
+
+  return (
+    <div className="home page">
+      <button onClick={() => navigate("/logout")}>Log Out</button>
+      <div className="makePost"></div>
+    </div>
+  );
 };
 
 export default Home;
