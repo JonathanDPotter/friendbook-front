@@ -5,6 +5,10 @@ import {
   GoogleLoginResponse,
   GoogleLoginResponseOffline,
 } from "react-google-login";
+import FacebookLogin, {
+  ReactFacebookFailureResponse,
+  ReactFacebookLoginInfo,
+} from "react-facebook-login";
 // components
 import Register from "../Register/Register";
 // utils
@@ -18,8 +22,8 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-
+  const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  const facebookClientId = process.env.REACT_APP_FACEBOOK_CLIENT_ID;
   const initialFormState = {
     email: "",
     password: "",
@@ -79,6 +83,39 @@ const Login = () => {
     }
   };
 
+  const responseFacebook = async (
+    response: ReactFacebookLoginInfo | ReactFacebookFailureResponse
+  ) => {
+    if ("status" in response) {
+      window.alert(response.status);
+    } else if ("email" in response && response.email && response.id) {
+      const { email, id, name, picture } = response;
+      const names: string[] = [];
+      if (name) names.push(...name.split(" "));
+
+      const newUser = {
+        firstName: names[0],
+        lastName: names[names.length - 1],
+        email,
+        image: picture?.data.url,
+        password: id,
+        gender: "custom",
+      };
+
+      await api.register(newUser);
+
+      const loginResponse = await api.login({ email, password: id });
+
+      if (!loginResponse.data.success) {
+        window.alert(loginResponse.data.message);
+      } else {
+        await dispatch(setToken(loginResponse.data.token));
+        await dispatch(setUser(loginResponse.data.userName));
+        navigate("/");
+      }
+    }
+  };
+
   const closeRegister = () => {
     setShowRegister(false);
   };
@@ -95,6 +132,7 @@ const Login = () => {
               name="email"
               onChange={handleChange}
               value={email.toLowerCase()}
+              autoComplete="email"
             />
           </div>
           <div className="label-input">
@@ -105,18 +143,29 @@ const Login = () => {
               name="password"
               onChange={handleChange}
               value={password}
+              autoComplete="password"
             />
           </div>
           <input type="submit" value="Log In" />
         </form>
         <div className="or">or</div>
-        {clientId && (
+        {googleClientId && (
           <GoogleLogin
-            clientId={clientId}
+            clientId={googleClientId}
             buttonText="Login"
             onSuccess={responseGoogle}
             onFailure={responseGoogle}
             cookiePolicy={"single_host_origin"}
+          />
+        )}
+        {facebookClientId && (
+          <FacebookLogin
+            appId={facebookClientId}
+            autoLoad={false}
+            fields="name,email,picture"
+            scope="public_profile, email"
+            callback={responseFacebook}
+            icon="fa-facebook"
           />
         )}
         <hr />
