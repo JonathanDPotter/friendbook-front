@@ -3,9 +3,25 @@
 header {
   height: 10vh;
   display: flex;
+  justify-content: space-between;
+
+  .logo {
+    height: 2rem;
+  }
 
   .icon {
-    height: 5vh;
+    height: 1.5rem;
+  }
+
+  .bell,
+  .caret {
+    border: 1px solid white;
+    border-radius: 50%;
+    background-color: lightgrey;
+    padding: 0.5rem;
+    width: 1rem;
+    height: 1rem;
+    position: relative;
   }
 
   a {
@@ -14,5 +30,30 @@ header {
 
   .active {
     color: theme.$blue;
+  }
+
+  nav {
+    margin-left: 10vw;
+    width: 50vw;
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+  .menu {
+    position: fixed;
+    top: 10vh;
+    right: 5vw;
+    border: 1px solid lightgrey;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    background: white;
+  }
+
+  .open {
+    opacity: 1;
+  }
+
+  .closed {
+    opacity: 0;
   }
 }
