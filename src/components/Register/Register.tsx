@@ -54,13 +54,12 @@ const Register: FC<IregisterProps> = ({ close }) => {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    const response = await api.register(formState);
+    const response = await api.register({ ...formState, image: "" });
 
     if (!response.data.success) {
       window.alert(response.data.message);
     } else {
       const loginResponse = await api.login({ email, password });
-      console.log(loginResponse.data.token);
       navigate("/");
     }
   };

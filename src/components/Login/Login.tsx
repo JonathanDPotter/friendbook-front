@@ -13,7 +13,7 @@ import FacebookLogin, {
 import Register from "../Register/Register";
 // utils
 import api from "../../api";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 // styles
 import "./Login.scss";
 import { setToken, setUser } from "../../store/authSlice";
@@ -21,6 +21,7 @@ import { setToken, setUser } from "../../store/authSlice";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { user, token } = useAppSelector((state) => state.auth);
 
   const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
   const facebookClientId = process.env.REACT_APP_FACEBOOK_CLIENT_ID;
@@ -42,7 +43,7 @@ const Login = () => {
       window.alert(response.data.message);
     } else {
       await dispatch(setToken(response.data.token));
-      await dispatch(setUser(response.data.userName));
+      await dispatch(setUser(response.data.user));
       navigate("/");
     }
   };
@@ -56,10 +57,11 @@ const Login = () => {
   const responseGoogle = async (
     response: GoogleLoginResponse | GoogleLoginResponseOffline
   ) => {
-    console.log(response)
     if ("profileObj" in response) {
       const { email, googleId, givenName, familyName, imageUrl } =
         response.profileObj;
+
+      console.log(imageUrl);
 
       const newUser = {
         firstName: givenName,
@@ -78,7 +80,7 @@ const Login = () => {
         window.alert(loginResponse.data.message);
       } else {
         await dispatch(setToken(loginResponse.data.token));
-        await dispatch(setUser(loginResponse.data.userName));
+        await dispatch(setUser(loginResponse.data.user));
         navigate("/");
       }
     }
@@ -98,7 +100,7 @@ const Login = () => {
         firstName: names[0],
         lastName: names[names.length - 1],
         email,
-        image: picture?.data.url,
+        image: picture?.data.url || "",
         password: id,
         gender: "custom",
       };
@@ -111,7 +113,7 @@ const Login = () => {
         window.alert(loginResponse.data.message);
       } else {
         await dispatch(setToken(loginResponse.data.token));
-        await dispatch(setUser(loginResponse.data.userName));
+        await dispatch(setUser(loginResponse.data.user));
         navigate("/");
       }
     }
