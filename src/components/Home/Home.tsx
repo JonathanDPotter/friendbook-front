@@ -27,7 +27,6 @@ const Home = () => {
 
   return (
     <div className="home page">
-      <button onClick={() => navigate("/logout")}>Log Out</button>
       <MakePost />
       <div className="makePost"></div>
     </div>

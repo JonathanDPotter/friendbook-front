@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useAppSelector } from "../../store/hooks";
+// components
+import Input from "./Input";
 
 const MakePost = () => {
   const { user } = useAppSelector((state) => state.auth);
 
-  const [post, setPost] = useState("");
+  const [inputOpen, setInputOpen] = useState(false);
 
   if (user) {
     return (
@@ -14,6 +16,10 @@ const MakePost = () => {
           alt={`${user.firstName} ${user.lastName}`}
           className="avatar"
         />
+        <p onClick={() => setInputOpen(true)}>
+          What's on your mind {user.firstName}?
+        </p>
+        {inputOpen && <Input close={() => setInputOpen(false)} />}
       </div>
     );
   } else {
