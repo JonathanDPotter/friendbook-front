@@ -1,9 +1,12 @@
 @use "../../theme";
 
 header {
-  height: 10vh;
+  height: 5vh;
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  padding: 0 1rem;
+  border-bottom: 1px solid lightgrey;
 
   .logo {
     height: 2rem;
@@ -26,10 +29,21 @@ header {
 
   a {
     color: black;
+    display: inline-block;
+    height: 5vh;
+    width: 4rem;
+    line-height: 5vh;
+    text-align: center;
+    border-bottom: 2px solid transparent;
+    transition: color 0.5s ease-out;
+    transition: border-color 0.5s ease-out;
   }
 
   .active {
     color: theme.$blue;
+    border-color: theme.$blue;
+    transition: color 0.5s ease-in;
+    transition: border-color 0.5s ease-in;
   }
 
   nav {

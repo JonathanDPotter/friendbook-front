@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useAppSelector } from "../../store/hooks";
 // components
 import Input from "./Input";
+// styles
+import "./MakePost.scss";
 
 const MakePost = () => {
   const { user } = useAppSelector((state) => state.auth);

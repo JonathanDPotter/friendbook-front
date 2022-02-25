@@ -6,6 +6,8 @@ import api from "../../api";
 import { logOut } from "../../store/authSlice";
 // components
 import MakePost from "../MakePost/MakePost";
+// styles
+import "./Home.scss";
 
 const Home = () => {
   const navigate = useNavigate();

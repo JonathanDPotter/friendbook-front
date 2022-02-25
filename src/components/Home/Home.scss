@@ -1,0 +1,8 @@
+@use "../../theme";
+
+.home {
+  min-height: 90vh;
+  position: relative;
+  background-color: whitesmoke;
+  @include theme.flex-column-acenter;
+}
