@@ -34,7 +34,7 @@ const Input: FC<Iprops> = ({ close }) => {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-
+// need to add resizing of image and saving of image here, returning image URL
     if (user) {
       const newPost: InewPost = {
         body,
