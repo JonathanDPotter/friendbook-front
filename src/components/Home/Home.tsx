@@ -16,6 +16,7 @@ const Home = () => {
   const { user, token } = useAppSelector((state) => state.auth);
 
   const checkValidation = async () => {
+    // logout if the token has expired
     if (token) {
       const valid = await api.validate(token);
       if (!valid.data.success) dispatch(logOut());
@@ -23,6 +24,7 @@ const Home = () => {
   };
 
   useEffect(() => {
+    // navigate to login if there is no user in the store
     if (!user) navigate("/login");
     if (token) checkValidation();
   }, [user, token]);

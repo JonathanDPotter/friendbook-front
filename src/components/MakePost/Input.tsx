@@ -1,7 +1,11 @@
 import React, { FC, FormEvent, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
+// utils
 import { useAppSelector } from "../../store/hooks";
+import api from "../../api";
+// interfaces
+import { InewPost } from "../../interfaces/post";
 
 interface Iprops {
   close: () => void;
@@ -12,7 +16,7 @@ const Input: FC<Iprops> = ({ close }) => {
     body: "",
     image: null,
   };
-
+  // get current user from redux store
   const { user } = useAppSelector((state) => state.auth);
 
   const [formState, setFormState] = useState(initialFormState);
@@ -28,9 +32,20 @@ const Input: FC<Iprops> = ({ close }) => {
       });
   };
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    console.log(formState);
+
+    if (user) {
+      const newPost: InewPost = {
+        body,
+        image: "image",
+        date: Date.now(),
+        author: user,
+      };
+
+      const result = await api.createPost(newPost);
+      console.log(result);
+    }
   };
 
   return (

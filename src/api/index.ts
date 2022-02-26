@@ -1,4 +1,5 @@
 import axios from "axios";
+import { InewPost } from "../interfaces/post";
 import { InewUser, Icredentials } from "../interfaces/user";
 
 const apiBaseURL = "http://localhost:1337";
@@ -14,6 +15,10 @@ const validate = (token: string) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
-const api = { register, login, validate };
+const createPost = (newPost: InewPost) => {
+  axios.post(apiBaseURL + "/api/posts", newPost);
+  }
+
+const api = { register, login, validate, createPost };
 
 export default api;
