@@ -4,21 +4,30 @@ import { InewUser, Icredentials } from "../interfaces/user";
 
 const apiBaseURL = "http://localhost:1337";
 
+// auth routes
 const register = (newUser: InewUser) =>
-  axios.post(apiBaseURL + "/api/users/register", newUser);
+  axios.post(`${apiBaseURL}/api/users/register`, newUser);
 
 const login = (credentials: Icredentials) =>
-  axios.post(apiBaseURL + "/api/users/login", credentials);
+  axios.post(`${apiBaseURL}/api/users/login`, credentials);
 
 const validate = (token: string) =>
-  axios.get(apiBaseURL + "/api/users/validate", {
+  axios.get(`${apiBaseURL}/api/users/validate`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-const createPost = (newPost: InewPost) => {
-  axios.post(apiBaseURL + "/api/posts", newPost);
-  }
+// post routes
+const createPost = async (newPost: InewPost) => {
+  const response = await axios.post(`${apiBaseURL}/api/posts`, newPost);
+  return response.data;
+};
 
-const api = { register, login, validate, createPost };
+// image routes
+const uploadImg = async (image: string) => {
+  const response = await axios.post(`${apiBaseURL}/api/image`, image);
+  return response.data;
+};
+
+const api = { register, login, validate, createPost, uploadImg };
 
 export default api;

@@ -1,4 +1,4 @@
-import React, { FC, FormEvent, useState } from "react";
+import React, { FC, FormEvent, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 // utils
@@ -12,41 +12,73 @@ interface Iprops {
 }
 
 const Input: FC<Iprops> = ({ close }) => {
-  const initialFormState: { body: string; image: File | null } = {
-    body: "",
-    image: null,
-  };
   // get current user from redux store
   const { user } = useAppSelector((state) => state.auth);
 
-  const [formState, setFormState] = useState(initialFormState);
-  const { body, image } = formState;
+  // initialize local form state and destructure for ease of use
+  const initialFormState: { body: string; file: File | null } = {
+    body: "",
+    file: null,
+  };
 
+  const [formState, setFormState] = useState(initialFormState);
+  const { body, file } = formState;
+  // local state for image file converted to base64 string
+  const [image, setImage] = useState("");
+
+  // change and submit handlers for form
   const handleChange = (event: FormEvent<HTMLInputElement>) => {
     const { id, value, files } = event.currentTarget;
     if (id === "body") setFormState({ ...formState, body: value });
-    if (id === "image" && files && files[0])
+    if (id === "file" && files && files[0])
       setFormState({
         ...formState,
-        image: files[0],
+        file: files[0],
       });
   };
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-// need to add resizing of image and saving of image here, returning image URL
-    if (user) {
-      const newPost: InewPost = {
-        body,
-        image: "image",
-        date: Date.now(),
-        author: user,
-      };
 
-      const result = await api.createPost(newPost);
-      console.log(result);
+    let imageUrl = "";
+
+    if (image) {
+      try {
+        const response = await api.uploadImg("image");
+        console.log(response);
+        imageUrl = response;
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    }
+
+    try {
+      if (user) {
+        const response = await api.createPost({
+          author: user,
+          body,
+          image: imageUrl,
+          date: Date.now(),
+        });
+        console.log(response);
+      }
+    } catch (error: any) {
+      console.error(error);
     }
   };
+
+  // watches the file variable for changes and saves a base64 string version of the image file in the local state variable image
+  useEffect(() => {
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        if (reader.result) {
+          setImage(reader.result as string);
+        }
+      };
+    }
+  }, [file]);
 
   return (
     <div className="input-back">
@@ -65,17 +97,17 @@ const Input: FC<Iprops> = ({ close }) => {
             onChange={handleChange}
             value={body}
           />
-          <label htmlFor="image">Add Photos</label>
+          <label htmlFor="file">Add Photos</label>
           <input
             type="file"
-            name="image"
-            id="image"
-            accept="image/*"
+            name="file"
+            id="file"
+            accept=".jpg, .png, .jpeg, .gif"
             onChange={handleChange}
           />
-          {image && (
+          {file && (
             <img
-              src={URL.createObjectURL(image)}
+              src={URL.createObjectURL(file)}
               alt="user uploaded"
               height="300"
             />
