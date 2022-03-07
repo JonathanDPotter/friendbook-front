@@ -1,4 +1,5 @@
 import React, { FC, FormEvent, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 // utils
@@ -12,6 +13,8 @@ interface Iprops {
 }
 
 const Input: FC<Iprops> = ({ close }) => {
+  const navigate = useNavigate();
+
   // get current user from redux store
   const { user } = useAppSelector((state) => state.auth);
 
@@ -44,11 +47,10 @@ const Input: FC<Iprops> = ({ close }) => {
 
     if (image) {
       try {
-        const response = await api.uploadImg("image");
-        console.log(response);
+        const response = await api.uploadImg(image);
         imageUrl = response;
       } catch (error: any) {
-        console.log(error.message);
+        window.alert(error.message);
       }
     }
 
@@ -63,8 +65,10 @@ const Input: FC<Iprops> = ({ close }) => {
         console.log(response);
       }
     } catch (error: any) {
-      console.error(error);
+      window.alert(error.message);
     }
+    // refresh page to close modal and display up-to-date posts
+    // navigate(0);
   };
 
   // watches the file variable for changes and saves a base64 string version of the image file in the local state variable image

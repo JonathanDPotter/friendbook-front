@@ -4,8 +4,12 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 // utils
 import api from "../../api";
 import { logOut } from "../../store/authSlice";
+import { useGetAllPostsQuery } from "../../store/postApiSlice";
 // components
 import MakePost from "../MakePost/MakePost";
+import Post from "../Post/Post";
+// interfaces
+import { Ipost } from "../../interfaces/post";
 // styles
 import "./Home.scss";
 
@@ -13,7 +17,11 @@ const Home = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
+  // get user from redux store
   const { user, token } = useAppSelector((state) => state.auth);
+  // get posts from redux api call
+  const { data, error } = useGetAllPostsQuery("");
+  if (error) console.log(error);
 
   const checkValidation = async () => {
     // logout if the token has expired
@@ -32,7 +40,8 @@ const Home = () => {
   return (
     <div className="home page">
       <MakePost />
-      <div className="makePost"></div>
+      {data &&
+        data.posts.map((post: Ipost) => <Post post={post} key={post._id} />)}
     </div>
   );
 };

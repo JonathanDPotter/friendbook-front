@@ -18,13 +18,14 @@ const validate = (token: string) =>
 
 // post routes
 const createPost = async (newPost: InewPost) => {
+  console.table(newPost);
   const response = await axios.post(`${apiBaseURL}/api/posts`, newPost);
   return response.data;
 };
 
 // image routes
 const uploadImg = async (image: string) => {
-  const response = await axios.post(`${apiBaseURL}/api/image`, image);
+  const response = await axios.post(`${apiBaseURL}/api/image`, { image });
   return response.data;
 };
 
