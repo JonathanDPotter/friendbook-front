@@ -20,7 +20,7 @@ const Home = () => {
   // get user from redux store
   const { user, token } = useAppSelector((state) => state.auth);
   // get posts from redux api call
-  const { data, error } = useGetAllPostsQuery("");
+  const { data, error, refetch } = useGetAllPostsQuery("");
   if (error) console.log(error);
 
   const checkValidation = async () => {
@@ -40,8 +40,11 @@ const Home = () => {
   return (
     <div className="home page">
       <MakePost />
-      {data &&
-        data.posts.map((post: Ipost) => <Post post={post} key={post._id} />)}
+      {data ? (
+        data.posts.map((post: Ipost) => <Post post={post} key={post._id} refetch={() => refetch()} />)
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
 };

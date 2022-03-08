@@ -18,10 +18,14 @@ const validate = (token: string) =>
 
 // post routes
 const createPost = async (newPost: InewPost) => {
-  console.table(newPost);
   const response = await axios.post(`${apiBaseURL}/api/posts`, newPost);
   return response.data;
 };
+
+const updatePost = async (_id: string, update: any) => {
+  const response = await axios.put(`${apiBaseURL}/api/posts/${_id}`, update);
+  return response.data;
+}
 
 // image routes
 const uploadImg = async (image: string) => {
@@ -29,6 +33,6 @@ const uploadImg = async (image: string) => {
   return response.data;
 };
 
-const api = { register, login, validate, createPost, uploadImg };
+const api = { register, login, validate, createPost, uploadImg, updatePost };
 
 export default api;

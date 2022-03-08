@@ -45,6 +45,7 @@ const Input: FC<Iprops> = ({ close }) => {
 
     let imageUrl = "";
 
+    // api saves image to cloudinary and returns URL 
     if (image) {
       try {
         const response = await api.uploadImg(image);
@@ -54,6 +55,7 @@ const Input: FC<Iprops> = ({ close }) => {
       }
     }
 
+    // api saves post in database
     try {
       if (user) {
         const response = await api.createPost({
@@ -61,6 +63,8 @@ const Input: FC<Iprops> = ({ close }) => {
           body,
           image: imageUrl,
           date: Date.now(),
+          comments: [],
+          reactions: [],
         });
         console.log(response);
       }
@@ -68,7 +72,7 @@ const Input: FC<Iprops> = ({ close }) => {
       window.alert(error.message);
     }
     // refresh page to close modal and display up-to-date posts
-    // navigate(0);
+    navigate(0);
   };
 
   // watches the file variable for changes and saves a base64 string version of the image file in the local state variable image

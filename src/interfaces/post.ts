@@ -12,11 +12,12 @@ export enum Reactions {
 }
 
 export interface Icomment {
+  id: string;
   author: Iuser;
   date: number;
   body: string;
   image: string;
-  reaction?: Reactions[];
+  reactions: Reactions[];
 }
 
 export interface Ipost extends Document {
@@ -24,8 +25,8 @@ export interface Ipost extends Document {
   date: number;
   body: string;
   image?: string;
-  reaction?: Reactions[];
-  comments?: Icomment[];
+  reactions: Reactions[];
+  comments: Icomment[];
 }
 
 export interface InewPost {
@@ -33,4 +34,6 @@ export interface InewPost {
   date: number;
   body: string;
   image: string;
+  comments: Icomment[];
+  reactions: Reactions[];
 }
