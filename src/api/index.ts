@@ -23,6 +23,7 @@ const createPost = async (newPost: InewPost) => {
 };
 
 const updatePost = async (_id: string, update: any) => {
+  console.log(update);
   const response = await axios.put(`${apiBaseURL}/api/posts/${_id}`, update);
   return response.data;
 }

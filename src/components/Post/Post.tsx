@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 // utils
@@ -14,9 +14,10 @@ interface Iprops {
 }
 
 const Post: FC<Iprops> = ({ post, refetch }) => {
-  const { author, body, image, reactions, comments } = post;
-  const { _id, firstName, lastName } = author as Iuser;
   const { user } = useAppSelector((state) => state.auth);
+  const [localPost, setLocalPost] = useState<Ipost | null>(null);
+  const { _id, author, body, image, reactions, comments } = post;
+  const {firstName, lastName } = author as Iuser;
 
   const handleReaction = async () => {
     if (post && post.reactions) {
@@ -45,7 +46,12 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
           image: "",
           reactions: [],
         };
-        const newCommentsArray = [...comments, newComment];
+        let newCommentsArray: Icomment[];
+        if (comments) {
+          newCommentsArray = [...comments, newComment];
+        } else {
+          newCommentsArray = [newComment];
+        }
         const response = await api.updatePost(_id, {
           comments: newCommentsArray,
         });
@@ -71,13 +77,13 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
         comments.length > 0 &&
         comments.map((comment) => <p key={comment.id}>{comment.body}</p>)}
       <div className="comment-like">
-        <div className="like">
-          <FontAwesomeIcon icon={faThumbsUp} onClick={handleReaction} />
+        <button className="like" onClick={handleReaction}>
+          <FontAwesomeIcon icon={faThumbsUp} />
           <span>{reactions && reactions.length}</span>
-        </div>
-        <div className="comment">
-          <FontAwesomeIcon icon={faComment} onClick={handleComment} />
-        </div>
+        </button>
+        <button className="comment" onClick={handleComment}>
+          <FontAwesomeIcon icon={faComment} />
+        </button>
       </div>
     </div>
   );
