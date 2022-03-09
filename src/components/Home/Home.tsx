@@ -39,9 +39,11 @@ const Home = () => {
 
   return (
     <div className="home page">
-      <MakePost />
+      <MakePost refetch={() => refetch()} />
       {data ? (
-        data.posts.map((post: Ipost) => <Post post={post} key={post._id} refetch={() => refetch()} />)
+        data.posts.map((post: Ipost) => (
+          <Post post={post} key={post._id} refetch={() => refetch()} />
+        ))
       ) : (
         <p>Loading...</p>
       )}

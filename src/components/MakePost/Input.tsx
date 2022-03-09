@@ -1,20 +1,16 @@
 import React, { FC, FormEvent, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 // utils
 import { useAppSelector } from "../../store/hooks";
 import api from "../../api";
-// interfaces
-import { InewPost } from "../../interfaces/post";
 
 interface Iprops {
   close: () => void;
+  refetch: () => void;
 }
 
-const Input: FC<Iprops> = ({ close }) => {
-  const navigate = useNavigate();
-
+const Input: FC<Iprops> = ({ close, refetch }) => {
   // get current user from redux store
   const { user } = useAppSelector((state) => state.auth);
 
@@ -24,8 +20,10 @@ const Input: FC<Iprops> = ({ close }) => {
     file: null,
   };
 
+  // local form state
   const [formState, setFormState] = useState(initialFormState);
   const { body, file } = formState;
+
   // local state for image file converted to base64 string
   const [image, setImage] = useState("");
 
@@ -45,7 +43,7 @@ const Input: FC<Iprops> = ({ close }) => {
 
     let imageUrl = "";
 
-    // api saves image to cloudinary and returns URL 
+    // api saves image to cloudinary and returns URL
     if (image) {
       try {
         const response = await api.uploadImg(image);
@@ -72,7 +70,8 @@ const Input: FC<Iprops> = ({ close }) => {
       window.alert(error.message);
     }
     // refresh page to close modal and display up-to-date posts
-    navigate(0);
+    close();
+    refetch();
   };
 
   // watches the file variable for changes and saves a base64 string version of the image file in the local state variable image

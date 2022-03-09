@@ -17,7 +17,7 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
   const { user } = useAppSelector((state) => state.auth);
   const [localPost, setLocalPost] = useState<Ipost | null>(null);
   const { _id, author, body, image, reactions, comments } = post;
-  const {firstName, lastName } = author as Iuser;
+  const { firstName, lastName } = author as Iuser;
 
   const handleReaction = async () => {
     if (post && post.reactions) {

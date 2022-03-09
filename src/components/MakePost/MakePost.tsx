@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { useAppSelector } from "../../store/hooks";
 // components
 import Input from "./Input";
 // styles
 import "./MakePost.scss";
 
-const MakePost = () => {
+interface Iprops {
+  refetch: () => void;
+}
+
+const MakePost: FC<Iprops> = ({ refetch }) => {
   const { user } = useAppSelector((state) => state.auth);
 
   const [inputOpen, setInputOpen] = useState(false);
@@ -21,7 +25,9 @@ const MakePost = () => {
         <p onClick={() => setInputOpen(true)}>
           What's on your mind {user.firstName}?
         </p>
-        {inputOpen && <Input close={() => setInputOpen(false)} />}
+        {inputOpen && (
+          <Input close={() => setInputOpen(false)} refetch={() => refetch()} />
+        )}
       </div>
     );
   } else {
