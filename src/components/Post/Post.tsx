@@ -7,6 +7,7 @@ import { useAppSelector } from "../../store/hooks";
 // interfaces
 import { Ipost, Reactions, Icomment } from "../../interfaces/post";
 import { Iuser } from "../../interfaces/user";
+import ReactionChooser from "../ReactionChooser/ReactionChooser";
 
 interface Iprops {
   post: Ipost;
@@ -15,15 +16,16 @@ interface Iprops {
 
 const Post: FC<Iprops> = ({ post, refetch }) => {
   const { user } = useAppSelector((state) => state.auth);
-  const [localPost, setLocalPost] = useState<Ipost | null>(null);
   const { _id, author, body, image, reactions, comments } = post;
   const { firstName, lastName } = author as Iuser;
 
-  const handleReaction = async () => {
+  // local state
+  const [showReactionChooser, setShowReactionChooser] = useState(false);
+
+  const handleReaction = async (reaction: Reactions) => {
     if (post && post.reactions) {
       try {
-        const newReaction: Reactions = Reactions.LIKE;
-        const newReactionsArray = [...reactions, newReaction];
+        const newReactionsArray = [...reactions, reaction];
         const response = await api.updatePost(_id, {
           reactions: newReactionsArray,
         });
@@ -33,6 +35,7 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
         console.log(error);
       }
     }
+    setShowReactionChooser(false);
   };
 
   const handleComment = async () => {
@@ -75,9 +78,13 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
       {image && <img src={image} alt="user submitted" className="post-img" />}
       {comments &&
         comments.length > 0 &&
-        comments.map((comment) => <p key={comment.id}>{comment.body}</p>)}
+        comments.map((comment) => {
+          <div className="comment" key={comment.id}>
+            <p>{comment.body}</p>
+          </div>;
+        })}
       <div className="comment-like">
-        <button className="like" onClick={handleReaction}>
+        <button className="like" onClick={() => setShowReactionChooser(true)}>
           <FontAwesomeIcon icon={faThumbsUp} />
           <span>{reactions && reactions.length}</span>
         </button>
@@ -85,6 +92,12 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
           <FontAwesomeIcon icon={faComment} />
         </button>
       </div>
+      {showReactionChooser && (
+        <ReactionChooser
+          close={() => setShowReactionChooser(false)}
+          submitReaction={handleReaction}
+        />
+      )}
     </div>
   );
 };

@@ -1,0 +1,28 @@
+@use "../../theme";
+
+.chooser {
+  height: 10vh;
+  width: 50vh;
+  background-color: white;
+  @include theme.flex-acenter-jspace-even;
+
+  button {
+    height: 2.3rem;
+    font-size: 2rem;
+    background-color: black;
+  }
+
+  .angry, .haha, .wow, .sad {
+    color: yellow;
+  }
+
+  .care, .love {
+    color: red;
+  }
+
+
+
+  .like {
+    color: theme.$blue;
+  }
+}
