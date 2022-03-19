@@ -1,28 +1,58 @@
 @use "../../theme";
 
 .chooser {
-  height: 10vh;
-  width: 50vh;
-  background-color: white;
+  height: fit-content;
+  width: 50vw;
+  padding: 1rem;
+  background-color: theme.$trans-black;
+  border-radius: 10px;
   @include theme.flex-acenter-jspace-even;
 
   button {
-    height: 2.3rem;
-    font-size: 2rem;
+    height: 2rem;
+    font-size: 1.5rem;
     background-color: black;
   }
 
-  .angry, .haha, .wow, .sad {
+  .angry,
+  .haha,
+  .wow,
+  .sad {
     color: yellow;
   }
 
-  .care, .love {
+  .care,
+  .love {
     color: red;
   }
 
-
-
   .like {
     color: theme.$blue;
+  }
+
+  button {
+    position: relative;
+    display: inline-block;
+    z-index: 0;
+
+    .tooltip-text {
+      visibility: hidden;
+      width: fit-content;
+      padding: 0.5rem;
+      background-color: theme.$trans-black;
+      text-align: center;
+      border-radius: 6px;
+      position: absolute;
+      top: -3.5rem;
+      left: 0;
+      z-index: 2;
+      color: black;
+      font-size: 1rem;
+    }
+    &:hover {
+      .tooltip-text {
+        visibility: visible;
+      }
+    }
   }
 }

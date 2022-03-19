@@ -17,59 +17,42 @@ import {
 import "./ReactionChooser.scss";
 
 interface Iprops {
-  close: () => void;
   submitReaction: (reaction: Reactions) => void;
 }
 
 const ReactionChooser: FC<Iprops> = ({ submitReaction }) => {
-  //  get portal element
-  const portal = document.getElementById("portal");
-
-  const ReactionModal = () => {
-    return (
-      <div className="modal-back">
-        <div className="chooser">
-          <button
-            className="angry"
-            onClick={() => submitReaction(Reactions.ANGRY)}
-          >
-            <FontAwesomeIcon icon={faAngry} />
-          </button>
-          <button
-            className="care"
-            onClick={() => submitReaction(Reactions.CARE)}
-          >
-            <FontAwesomeIcon icon={faHandHoldingHeart} />
-          </button>
-          <button
-            className="love"
-            onClick={() => submitReaction(Reactions.LOVE)}
-          >
-            <FontAwesomeIcon icon={faHeart} />
-          </button>
-          <button
-            className="haha"
-            onClick={() => submitReaction(Reactions.HAHA)}
-          >
-            <FontAwesomeIcon icon={faLaugh} />
-          </button>
-          <button className="sad" onClick={() => submitReaction(Reactions.SAD)}>
-            <FontAwesomeIcon icon={faSadTear} />
-          </button>
-          <button className="wow" onClick={() => submitReaction(Reactions.WOW)}>
-            <FontAwesomeIcon icon={faSurprise} />
-          </button>
-          <button
-            className="like"
-            onClick={() => submitReaction(Reactions.LIKE)}
-          >
-            <FontAwesomeIcon icon={faThumbsUp} />
-          </button>
-        </div>
-      </div>
-    );
-  };
-  return portal ? ReactDOM.createPortal(<ReactionModal />, portal) : <></>;
+  return (
+    <div className="chooser">
+      <button className="angry" onClick={() => submitReaction(Reactions.ANGRY)}>
+        <FontAwesomeIcon icon={faAngry} />
+        <span className="tooltip-text">angry</span>
+      </button>
+      <button className="care" onClick={() => submitReaction(Reactions.CARE)}>
+        <FontAwesomeIcon icon={faHandHoldingHeart} />
+        <span className="tooltip-text">care</span>
+      </button>
+      <button className="love" onClick={() => submitReaction(Reactions.LOVE)}>
+        <FontAwesomeIcon icon={faHeart} />
+        <span className="tooltip-text">love</span>
+      </button>
+      <button className="haha" onClick={() => submitReaction(Reactions.HAHA)}>
+        <FontAwesomeIcon icon={faLaugh} />
+        <span className="tooltip-text">haha</span>
+      </button>
+      <button className="sad" onClick={() => submitReaction(Reactions.SAD)}>
+        <FontAwesomeIcon icon={faSadTear} />
+        <span className="tooltip-text">sad</span>
+      </button>
+      <button className="wow" onClick={() => submitReaction(Reactions.WOW)}>
+        <FontAwesomeIcon icon={faSurprise} />
+        <span className="tooltip-text">wow</span>
+      </button>
+      <button className="like" onClick={() => submitReaction(Reactions.LIKE)}>
+        <FontAwesomeIcon icon={faThumbsUp} />
+        <span className="tooltip-text">like</span>
+      </button>
+    </div>
+  );
 };
 
 export default ReactionChooser;

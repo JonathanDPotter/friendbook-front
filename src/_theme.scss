@@ -1,5 +1,6 @@
 $blue: rgb(27, 116, 228);
 $trans-grey: rgba(255, 255, 255, 0.6);
+$trans-black: rgba($color: #000000, $alpha: 0.2);
 
 @mixin flex-column-acenter {
   display: flex;
