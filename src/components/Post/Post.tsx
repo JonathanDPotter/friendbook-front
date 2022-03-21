@@ -6,7 +6,7 @@ import { Popover, ArrowContainer } from "react-tiny-popover";
 import api from "../../api";
 import { useAppSelector } from "../../store/hooks";
 // interfaces
-import { Ipost, Reactions, Icomment } from "../../interfaces/post";
+import { Ipost, Reactions, Icomment, Ireactions } from "../../interfaces/post";
 import { Iuser } from "../../interfaces/user";
 import ReactionChooser from "../ReactionChooser/ReactionChooser";
 // styles
@@ -26,21 +26,54 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
 
   // local state
   const [showReactionChooser, setShowReactionChooser] = useState(false);
+  const [userReacted, setUserReacted] = useState(false);
 
   const handleReaction = async (reaction: Reactions) => {
-    if (post && post.reactions) {
-      try {
-        const newReactionsArray = [...reactions, reaction];
-        const response = await api.updatePost(_id, {
-          reactions: newReactionsArray,
-        });
-        console.log(response);
-        refetch();
-      } catch (error: any) {
-        console.log(error);
+    if (user && post && post.reactions) {
+      const userName = `${user.firstName} ${user.lastName}`;
+      if (!userReacted) {
+        try {
+          // spreads keys of reactions object into newReactionsObject then replaces the array at the key that has the same name as the reaction chosen with a new array that consists of the old array (reactions[reaction]) plus the name of the user that posted the reaction
+          const newReactionsObject = {
+            ...reactions,
+            [reaction]: [...reactions[reaction], userName],
+          };
+          const response = await api.updatePost(_id, {
+            reactions: newReactionsObject,
+          });
+          console.log(response);
+          refetch();
+        } catch (error: any) {
+          console.log(error);
+        }
+        setShowReactionChooser(false);
+      } else {
+        console.log(reactions);
+        try {
+          let arrayKey = "";
+          Object.keys(reactions).forEach((key) => {
+            if (reactions[key as keyof Ireactions].includes(userName)) {
+              arrayKey = key;
+            }
+          });
+
+          const newReactionsObject = {
+            ...reactions,
+            [arrayKey]: [...reactions[arrayKey as keyof Ireactions]].filter(
+              (value) => value !== `${user.firstName} ${user.lastName}`
+            ),
+          };
+
+          const response = await api.updatePost(_id, {
+            reactions: newReactionsObject,
+          });
+          console.log(response);
+          refetch();
+        } catch (error: any) {
+          console.log(error);
+        }
       }
     }
-    setShowReactionChooser(false);
   };
 
   const handleComment = async () => {
@@ -52,7 +85,15 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
           date: Date.now(),
           body: "comment",
           image: "",
-          reactions: [],
+          reactions: {
+            angry: [],
+            care: [],
+            love: [],
+            haha: [],
+            wow: [],
+            sad: [],
+            like: [],
+          },
         };
         let newCommentsArray: Icomment[];
         if (comments) {
@@ -72,6 +113,18 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
       }
     }
   };
+
+  useEffect(() => {
+    if (user && reactions) {
+      if (
+        Object.values(reactions)
+          .flat()
+          .includes(`${user.firstName} ${user.lastName}`)
+      ) {
+        setUserReacted(true);
+      } else setUserReacted(false);
+    }
+  }, [reactions]);
 
   return (
     <div className="post">
@@ -102,8 +155,14 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
                 className="reaction"
                 onMouseOver={() => setShowReactionChooser(true)}
               >
-                <FontAwesomeIcon icon={faThumbsUp} />
-                <span>{reactions && reactions.length}</span>
+                <FontAwesomeIcon
+                  icon={faThumbsUp}
+                  className={userReacted ? "reacted" : ""}
+                />
+                <span>
+                  {/* gets total number of reactions */}
+                  {reactions && Object.values(reactions).flat().length}
+                </span>
               </div>
             }
             reposition={true}
@@ -113,7 +172,7 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
                 childRect={childRect}
                 popoverRect={popoverRect}
                 arrowSize={20}
-                arrowColor={"rgba($color: #000000, $alpha: 0.3);"}
+                arrowColor={"rgba($color: #000000, $alpha: 0.3)"}
                 className="popover-arrow"
               >
                 <ReactionChooser submitReaction={handleReaction} />

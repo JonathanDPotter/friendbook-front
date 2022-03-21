@@ -1,5 +1,11 @@
+@use "../../theme";
+
 .post {
   .post-img {
     height: 20rem;
+  }
+
+  .reacted {
+    color: theme.$blue;
   }
 }

@@ -11,13 +11,23 @@ export enum Reactions {
   ANGRY = "angry",
 }
 
+export interface Ireactions {
+  angry: string[];
+  care: string[];
+  love: string[];
+  haha: string[];
+  wow: string[];
+  sad: string[];
+  like: string[];
+}
+
 export interface Icomment {
   id: string;
   author: Iuser;
   date: number;
   body: string;
   image: string;
-  reactions: Reactions[];
+  reactions: Ireactions;
 }
 
 export interface Ipost extends Document {
@@ -25,7 +35,7 @@ export interface Ipost extends Document {
   date: number;
   body: string;
   image?: string;
-  reactions: Reactions[];
+  reactions: Ireactions;
   comments: Icomment[];
 }
 
@@ -35,5 +45,5 @@ export interface InewPost {
   body: string;
   image: string;
   comments: Icomment[];
-  reactions: Reactions[];
+  reactions: Ireactions;
 }

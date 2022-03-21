@@ -62,7 +62,15 @@ const Input: FC<Iprops> = ({ close, refetch }) => {
           image: imageUrl,
           date: Date.now(),
           comments: [],
-          reactions: [],
+          reactions: {
+            angry: [],
+            care: [],
+            love: [],
+            haha: [],
+            wow: [],
+            sad: [],
+            like: [],
+          },
         });
         console.log(response);
       }
