@@ -1,7 +1,16 @@
 import React, { FC, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faComment, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
-import { Popover, ArrowContainer } from "react-tiny-popover";
+import {
+  faComment,
+  faThumbsUp,
+  faAngry,
+  faHandHoldingHeart,
+  faHeart,
+  faLaugh,
+  faSadTear,
+  faSurprise,
+} from "@fortawesome/free-solid-svg-icons";
+import { Popover } from "react-tiny-popover";
 // utils
 import api from "../../api";
 import { useAppSelector } from "../../store/hooks";
@@ -28,6 +37,9 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
   const [showReactionChooser, setShowReactionChooser] = useState(false);
   const [userReacted, setUserReacted] = useState(false);
 
+  // timeout variable
+  let timer: ReturnType<typeof setTimeout>;
+
   const handleReaction = async (reaction: Reactions) => {
     if (user && post && post.reactions) {
       const userName = `${user.firstName} ${user.lastName}`;
@@ -46,7 +58,6 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
         } catch (error: any) {
           console.log(error);
         }
-        setShowReactionChooser(false);
       } else {
         console.log(reactions);
         try {
@@ -73,6 +84,7 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
           console.log(error);
         }
       }
+      setShowReactionChooser(false);
     }
   };
 
@@ -114,6 +126,15 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
     }
   };
 
+  const handleShowReactionChooser = () => {
+    timer = setTimeout(() => setShowReactionChooser(true), 1000);
+  };
+
+  const handleThumbClick = () => {
+    handleReaction(Reactions.LIKE);
+    clearTimeout(timer);
+  };
+
   useEffect(() => {
     if (user && reactions) {
       if (
@@ -144,6 +165,84 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
           </div>;
         })}
       <div className="comment-like">
+        <div className="total-reactions">
+          {reactions.angry.length > 0 && (
+            <label>
+              <FontAwesomeIcon icon={faAngry} />
+              <div className="tooltip-text">
+                {reactions.angry.map((name) => (
+                  <p>{name}</p>
+                ))}
+              </div>
+            </label>
+          )}
+          {reactions.care.length > 0 && (
+            <label>
+              <FontAwesomeIcon icon={faHandHoldingHeart} />
+              <div className="tooltip-text">
+                {reactions.care.map((name) => (
+                  <p>{name}</p>
+                ))}
+              </div>
+            </label>
+          )}
+          {reactions.love.length > 0 && (
+            <label>
+              <FontAwesomeIcon icon={faHeart} />
+              <div className="tooltip-text">
+                {reactions.love.map((name) => (
+                  <p>{name}</p>
+                ))}
+              </div>
+            </label>
+          )}
+          {reactions.haha.length > 0 && (
+            <label>
+              <FontAwesomeIcon icon={faLaugh} />
+              <div className="tooltip-text">
+                {reactions.haha.map((name) => (
+                  <p>{name}</p>
+                ))}
+              </div>
+            </label>
+          )}
+          {reactions.wow.length > 0 && (
+            <label>
+              <FontAwesomeIcon icon={faSurprise} />
+              <div className="tooltip-text">
+                {reactions.wow.map((name) => (
+                  <p>{name}</p>
+                ))}
+              </div>
+            </label>
+          )}
+          {reactions.sad.length > 0 && (
+            <label>
+              <FontAwesomeIcon icon={faSadTear} />
+              <div className="tooltip-text">
+                {reactions.sad.map((name) => (
+                  <p>{name}</p>
+                ))}
+              </div>
+            </label>
+          )}
+          {reactions.like.length > 0 && (
+            <label>
+              <FontAwesomeIcon icon={faThumbsUp} />
+              <div className="tooltip-text">
+                {reactions.like.map((name) => (
+                  <p>{name}</p>
+                ))}
+              </div>
+            </label>
+          )}
+          <span>
+            {/* gets total number of reactions */}
+            {reactions &&
+              Object.values(reactions).flat().length > 0 &&
+              Object.values(reactions).flat().length}
+          </span>
+        </div>
         <div className="comment">
           <Popover
             isOpen={showReactionChooser}
@@ -153,31 +252,24 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
             children={
               <div
                 className="reaction"
-                onMouseOver={() => setShowReactionChooser(true)}
+                onMouseEnter={handleShowReactionChooser}
+                onMouseLeave={() => clearTimeout(timer)}
+                onClick={handleThumbClick}
               >
                 <FontAwesomeIcon
                   icon={faThumbsUp}
                   className={userReacted ? "reacted" : ""}
                 />
-                <span>
-                  {/* gets total number of reactions */}
-                  {reactions && Object.values(reactions).flat().length}
-                </span>
               </div>
             }
             reposition={true}
-            content={({ position, childRect, popoverRect }) => (
-              <ArrowContainer
-                position={position}
-                childRect={childRect}
-                popoverRect={popoverRect}
-                arrowSize={20}
-                arrowColor={"rgba($color: #000000, $alpha: 0.3)"}
-                className="popover-arrow"
-              >
+            content={() =>
+              !userReacted ? (
                 <ReactionChooser submitReaction={handleReaction} />
-              </ArrowContainer>
-            )}
+              ) : (
+                <></>
+              )
+            }
           />
         </div>
         <button className="comment" onClick={handleComment}>

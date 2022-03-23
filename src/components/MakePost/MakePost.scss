@@ -1,9 +1,13 @@
 @use "../../theme";
 
 .make-post {
-height: 15vh;
-width: 80%;
-background-color: white;
+  height: 15vh;
+  width: 80%;
+  background-color: white;
+
+  img {
+    @include theme.little-round-img;
+  }
 }
 
 .input-back {
