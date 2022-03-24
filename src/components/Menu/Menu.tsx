@@ -13,10 +13,11 @@ const Menu: FC<Iprops> = ({ open, close }) => {
     close();
     navigate("/logout");
   };
-  
+
   return (
     <div className={`menu ${open ? "open" : "closed"}`}>
-      <h2 onClick={logOut}>Log Out</h2>
+      <button onClick={logOut}>Log Out</button>
+      <button onClick={close}>Close</button>
     </div>
   );
 };

@@ -7,28 +7,7 @@
   background-color: theme.$trans-black;
   border-radius: 10px;
   @include theme.flex-acenter-jspace-even;
-
-  button {
-    height: 2rem;
-    font-size: 1.5rem;
-    background-color: black;
-  }
-
-  .angry,
-  .haha,
-  .wow,
-  .sad {
-    color: yellow;
-  }
-
-  .care,
-  .love {
-    color: red;
-  }
-
-  .like {
-    color: theme.$blue;
-  }
+  @include theme.reaction-icon-styles;
 
   button {
     position: relative;

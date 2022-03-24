@@ -63,8 +63,18 @@ header {
     background: white;
   }
 
+  .menu {
+    @include theme.flex-column-acenter;
+
+    button {
+      height: 3rem;
+      margin-bottom: 1rem;
+    }
+  }
+
   .open {
     opacity: 1;
+    z-index: 1;
   }
 
   .closed {

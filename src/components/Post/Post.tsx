@@ -9,6 +9,7 @@ import {
   faLaugh,
   faSadTear,
   faSurprise,
+  faShare,
 } from "@fortawesome/free-solid-svg-icons";
 import { Popover } from "react-tiny-popover";
 // utils
@@ -157,93 +158,93 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
       <p className="post-author">{`${firstName} ${lastName}`}</p>
       <p className="post-body">{body}</p>
       {image && <img src={image} alt="user submitted" className="post-img" />}
-      {comments &&
-        comments.length > 0 &&
-        comments.map((comment) => {
-          <div className="comment" key={comment.id}>
-            <p>{comment.body}</p>
-          </div>;
-        })}
-      <div className="comment-like">
-        <div className="total-reactions">
-          {reactions.angry.length > 0 && (
-            <label>
-              <FontAwesomeIcon icon={faAngry} />
-              <div className="tooltip-text">
-                {reactions.angry.map((name) => (
-                  <p>{name}</p>
-                ))}
-              </div>
-            </label>
-          )}
-          {reactions.care.length > 0 && (
-            <label>
-              <FontAwesomeIcon icon={faHandHoldingHeart} />
-              <div className="tooltip-text">
-                {reactions.care.map((name) => (
-                  <p>{name}</p>
-                ))}
-              </div>
-            </label>
-          )}
-          {reactions.love.length > 0 && (
-            <label>
-              <FontAwesomeIcon icon={faHeart} />
-              <div className="tooltip-text">
-                {reactions.love.map((name) => (
-                  <p>{name}</p>
-                ))}
-              </div>
-            </label>
-          )}
-          {reactions.haha.length > 0 && (
-            <label>
-              <FontAwesomeIcon icon={faLaugh} />
-              <div className="tooltip-text">
-                {reactions.haha.map((name) => (
-                  <p>{name}</p>
-                ))}
-              </div>
-            </label>
-          )}
-          {reactions.wow.length > 0 && (
-            <label>
-              <FontAwesomeIcon icon={faSurprise} />
-              <div className="tooltip-text">
-                {reactions.wow.map((name) => (
-                  <p>{name}</p>
-                ))}
-              </div>
-            </label>
-          )}
-          {reactions.sad.length > 0 && (
-            <label>
-              <FontAwesomeIcon icon={faSadTear} />
-              <div className="tooltip-text">
-                {reactions.sad.map((name) => (
-                  <p>{name}</p>
-                ))}
-              </div>
-            </label>
-          )}
-          {reactions.like.length > 0 && (
-            <label>
-              <FontAwesomeIcon icon={faThumbsUp} />
-              <div className="tooltip-text">
-                {reactions.like.map((name) => (
-                  <p>{name}</p>
-                ))}
-              </div>
-            </label>
-          )}
-          <span>
-            {/* gets total number of reactions */}
-            {reactions &&
-              Object.values(reactions).flat().length > 0 &&
-              Object.values(reactions).flat().length}
-          </span>
-        </div>
-        <div className="comment">
+      <div className="comments">
+        {comments.map((comment, i) => (
+          <p key={`comment${i}`}>{comment.body}</p>
+        ))}
+      </div>
+
+      {/* displays the reaction icon and adds a tooltip with the names of all the users that reacted that way if there is at least one reaction of that type */}
+      <div className="reactions">
+        {reactions.angry.length > 0 && (
+          <button className="angry">
+            <FontAwesomeIcon icon={faAngry} />
+            <div className="tooltip-text">
+              {reactions.angry.map((name, i) => (
+                <p key={`angry${i}`}>{name}</p>
+              ))}
+            </div>
+          </button>
+        )}
+        {reactions.care.length > 0 && (
+          <button className="care">
+            <FontAwesomeIcon icon={faHandHoldingHeart} />
+            <div className="tooltip-text">
+              {reactions.care.map((name, i) => (
+                <p key={`care${i}`}>{name}</p>
+              ))}
+            </div>
+          </button>
+        )}
+        {reactions.love.length > 0 && (
+          <button className="love">
+            <FontAwesomeIcon icon={faHeart} />
+            <div className="tooltip-text">
+              {reactions.love.map((name, i) => (
+                <p key={`love${i}`}>{name}</p>
+              ))}
+            </div>
+          </button>
+        )}
+        {reactions.haha.length > 0 && (
+          <button className="haha">
+            <FontAwesomeIcon icon={faLaugh} />
+            <div className="tooltip-text">
+              {reactions.haha.map((name, i) => (
+                <p key={`haha${i}`}>{name}</p>
+              ))}
+            </div>
+          </button>
+        )}
+        {reactions.wow.length > 0 && (
+          <button className="wow">
+            <FontAwesomeIcon icon={faSurprise} />
+            <div className="tooltip-text">
+              {reactions.wow.map((name, i) => (
+                <p key={`wow${i}`}>{name}</p>
+              ))}
+            </div>
+          </button>
+        )}
+        {reactions.sad.length > 0 && (
+          <button className="sad">
+            <FontAwesomeIcon icon={faSadTear} />
+            <div className="tooltip-text">
+              {reactions.sad.map((name, i) => (
+                <p key={`sad${i}`}>{name}</p>
+              ))}
+            </div>
+          </button>
+        )}
+        {reactions.like.length > 0 && (
+          <button className="like">
+            <FontAwesomeIcon icon={faThumbsUp} />
+            <div className="tooltip-text">
+              {reactions.like.map((name, i) => (
+                <p key={`like${i}`}>{name}</p>
+              ))}
+            </div>
+          </button>
+        )}
+        <span className="total-reactions">
+          {/* displays total number of reactions */}
+          {reactions &&
+            Object.values(reactions).flat().length > 0 &&
+            Object.values(reactions).flat().length}
+        </span>
+      </div>
+      <div className="comment-react">
+        <div className="reaction-button">
           <Popover
             isOpen={showReactionChooser}
             positions={["top", "right"]}
@@ -272,8 +273,11 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
             }
           />
         </div>
-        <button className="comment" onClick={handleComment}>
+        <button className="comment-button" onClick={handleComment}>
           <FontAwesomeIcon icon={faComment} />
+        </button>
+        <button className="share">
+          <FontAwesomeIcon icon={faShare} />
         </button>
       </div>
     </div>

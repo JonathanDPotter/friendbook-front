@@ -26,3 +26,31 @@ $trans-black: rgba(
   height: 3rem;
   border-radius: 50%;
 }
+
+@mixin reaction-icon-styles {
+  button {
+    height: 2rem;
+    width: 2rem;
+    font-size: 1.5rem;
+    background-color: black;
+    border-radius: 50%;
+    padding-top: 1%;
+    @include flex-column-ajcenter();
+  }
+
+  .angry,
+  .haha,
+  .wow,
+  .sad {
+    color: yellow;
+  }
+
+  .care,
+  .love {
+    color: red;
+  }
+
+  .like {
+    color: $blue;
+  }
+}

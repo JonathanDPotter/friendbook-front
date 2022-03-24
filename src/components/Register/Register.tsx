@@ -54,7 +54,7 @@ const Register: FC<IregisterProps> = ({ close }) => {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    const response = await api.register({ ...formState, image: "" });
+    const response = await api.register({ ...formState, image: "image" });
 
     if (!response.data.success) {
       window.alert(response.data.message);
