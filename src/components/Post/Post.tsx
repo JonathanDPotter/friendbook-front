@@ -10,17 +10,22 @@ import {
   faSadTear,
   faSurprise,
   faShare,
+  faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { Popover } from "react-tiny-popover";
 // utils
 import api from "../../api";
 import { useAppSelector } from "../../store/hooks";
+// components
+import Comment from "../Comment/Comment";
+import Input from "../Input/Input";
 // interfaces
 import { Ipost, Reactions, Icomment, Ireactions } from "../../interfaces/post";
 import { Iuser } from "../../interfaces/user";
 import ReactionChooser from "../ReactionChooser/ReactionChooser";
 // styles
 import "./Post.scss";
+import ChooseModal from "../ChooseModal/ChooseModal";
 
 interface Iprops {
   post: Ipost;
@@ -37,6 +42,8 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
   // local state
   const [showReactionChooser, setShowReactionChooser] = useState(false);
   const [userReacted, setUserReacted] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showInputModal, setShowInputModal] = useState(false);
 
   // timeout variable
   let timer: ReturnType<typeof setTimeout>;
@@ -89,44 +96,6 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
     }
   };
 
-  const handleComment = async () => {
-    if (post && user) {
-      try {
-        const newComment: Icomment = {
-          id: `${_id}comment${comments.length}`,
-          author: user,
-          date: Date.now(),
-          body: "comment",
-          image: "",
-          reactions: {
-            angry: [],
-            care: [],
-            love: [],
-            haha: [],
-            wow: [],
-            sad: [],
-            like: [],
-          },
-        };
-        let newCommentsArray: Icomment[];
-        if (comments) {
-          newCommentsArray = [...comments, newComment];
-        } else {
-          newCommentsArray = [newComment];
-        }
-        const response = await api.updatePost(_id, {
-          comments: newCommentsArray,
-        });
-        console.log(response);
-        // refetch pulls updated data from the server
-        refetch();
-      } catch (error: any) {
-        console.log(error);
-        window.alert(error.message);
-      }
-    }
-  };
-
   const handleShowReactionChooser = () => {
     timer = setTimeout(() => setShowReactionChooser(true), 1000);
   };
@@ -134,6 +103,11 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
   const handleThumbClick = () => {
     handleReaction(Reactions.LIKE);
     clearTimeout(timer);
+  };
+
+  const deletePost = () => {
+    api.deletePost(_id);
+    refetch();
   };
 
   useEffect(() => {
@@ -160,7 +134,7 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
       {image && <img src={image} alt="user submitted" className="post-img" />}
       <div className="comments">
         {comments.map((comment, i) => (
-          <p key={`comment${i}`}>{comment.body}</p>
+          <Comment key={`${_id}comment${i}`} comment={comment} />
         ))}
       </div>
 
@@ -273,13 +247,36 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
             }
           />
         </div>
-        <button className="comment-button" onClick={handleComment}>
+        <button
+          className="comment-button"
+          onClick={() => setShowInputModal(true)}
+        >
           <FontAwesomeIcon icon={faComment} />
         </button>
         <button className="share">
           <FontAwesomeIcon icon={faShare} />
         </button>
+        {`${user?.firstName} ${user?.lastName}` ===
+          `${author.firstName} ${author.lastName}` && (
+          <button onClick={() => setShowDeleteModal(true)}>
+            <FontAwesomeIcon icon={faTrashCan} />
+          </button>
+        )}
       </div>
+      {showDeleteModal && (
+        <ChooseModal
+          text="Delete this post?"
+          choose={deletePost}
+          cancel={() => setShowDeleteModal(false)}
+        />
+      )}
+      {showInputModal && (
+        <Input
+          post={post}
+          close={() => setShowInputModal(false)}
+          refetch={refetch}
+        />
+      )}
     </div>
   );
 };

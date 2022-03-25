@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { useAppSelector } from "../../store/hooks";
 // components
-import Input from "./Input";
+import Input from "../Input/Input";
 // styles
 import "./MakePost.scss";
 
@@ -23,7 +23,7 @@ const MakePost: FC<Iprops> = ({ refetch }) => {
           className="avatar"
         />
         <p onClick={() => setInputOpen(true)}>
-          What's on your mind {user.firstName}?
+          What's on your mind, {user.firstName}?
         </p>
         {inputOpen && (
           <Input close={() => setInputOpen(false)} refetch={() => refetch()} />

@@ -11,6 +11,7 @@ body {
   font-family: "Ruda", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 code {
@@ -38,4 +39,27 @@ input {
   width: 100vw;
   background-color: theme.$trans-black;
   @include theme.flex-column-ajcenter;
+}
+
+.input-back {
+  z-index: 1;
+  position: absolute;
+  top: -5vh;
+  left: 0;
+  min-height: 100vh;
+  height: 100%;
+  width: 100vw;
+  background-color: theme.$trans-black;
+  @include theme.flex-column-ajcenter;
+
+  .input-card {
+    z-index: 2;
+    opacity: 1;
+    height: 60vh;
+    width: 60vw;
+    background-color: white;
+    border: 1px solid lightgrey;
+    border-radius: 2%;
+    padding: 1rem;
+  }
 }

@@ -26,7 +26,12 @@ const updatePost = async (_id: string, update: any) => {
   console.log(update);
   const response = await axios.put(`${apiBaseURL}/api/posts/${_id}`, update);
   return response.data;
-}
+};
+
+const deletePost = async (_id: string) => {
+  const response = await axios.delete(`${apiBaseURL}/api/posts/${_id}`);
+  return response.data;
+};
 
 // image routes
 const uploadImg = async (image: string) => {
@@ -34,6 +39,14 @@ const uploadImg = async (image: string) => {
   return response.data;
 };
 
-const api = { register, login, validate, createPost, uploadImg, updatePost };
+const api = {
+  register,
+  login,
+  validate,
+  createPost,
+  updatePost,
+  deletePost,
+  uploadImg,
+};
 
 export default api;

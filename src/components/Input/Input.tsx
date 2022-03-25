@@ -1,26 +1,33 @@
 import React, { FC, FormEvent, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 // utils
 import { useAppSelector } from "../../store/hooks";
 import api from "../../api";
+import { Ipost } from "../../interfaces/post";
+// styles
+import "./Input.scss";
 
 interface Iprops {
+  post?: Ipost;
   close: () => void;
   refetch: () => void;
 }
 
-const Input: FC<Iprops> = ({ close, refetch }) => {
+const Input: FC<Iprops> = ({ close, refetch, post }) => {
+  // store target for portal in variable portal
+  const portal = document.getElementById("portal");
+
   // get current user from redux store
   const { user } = useAppSelector((state) => state.auth);
 
-  // initialize local form state and destructure for ease of use
+  // initialize local form state and destructure it for ease of use
   const initialFormState: { body: string; file: File | null } = {
     body: "",
     file: null,
   };
 
-  // local form state
   const [formState, setFormState] = useState(initialFormState);
   const { body, file } = formState;
 
@@ -53,9 +60,9 @@ const Input: FC<Iprops> = ({ close, refetch }) => {
       }
     }
 
-    // api saves post in database
+    // if new post, api saves post in database
     try {
-      if (user) {
+      if (user && !post) {
         const response = await api.createPost({
           author: user,
           body,
@@ -73,6 +80,30 @@ const Input: FC<Iprops> = ({ close, refetch }) => {
           },
         });
         console.log(response);
+      }
+
+      // if new comment api saves comment in database
+      if (user && post) {
+        const response = await api.updatePost(post._id, {
+          comments: [
+            ...post.comments,
+            {
+              author: user,
+              body,
+              image: imageUrl,
+              date: Date.now(),
+              reactions: {
+                angry: [],
+                care: [],
+                love: [],
+                haha: [],
+                wow: [],
+                sad: [],
+                like: [],
+              },
+            },
+          ],
+        });
       }
     } catch (error: any) {
       window.alert(error.message);
@@ -95,43 +126,48 @@ const Input: FC<Iprops> = ({ close, refetch }) => {
     }
   }, [file]);
 
-  return (
-    <div className="input-back">
-      <div className="input-card">
-        <h1>Create post</h1>
-        <button onClick={close}>{<FontAwesomeIcon icon={faX} />}</button>
-        <img src={user ? user.image : ""} alt="user avatar" />
-        <h2>
-          {user?.firstName} {user?.lastName}
-        </h2>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="body"
-            id="body"
-            onChange={handleChange}
-            value={body}
-          />
-          <label htmlFor="file">Add Photos</label>
-          <input
-            type="file"
-            name="file"
-            id="file"
-            accept=".jpg, .png, .jpeg, .gif"
-            onChange={handleChange}
-          />
-          {file && (
-            <img
-              src={URL.createObjectURL(file)}
-              alt="user uploaded"
-              height="300"
+  if (portal) {
+    return createPortal(
+      <div className="input-back">
+        <div className="input-card">
+          <h1>Create post</h1>
+          <button onClick={close}>{<FontAwesomeIcon icon={faX} />}</button>
+          <img src={user ? user.image : ""} alt="user avatar" />
+          <h2>
+            {user?.firstName} {user?.lastName}
+          </h2>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="body"
+              id="body"
+              onChange={handleChange}
+              value={body}
             />
-          )}
-          <input type="submit" value="Post" />
-        </form>
-      </div>
-    </div>
-  );
+            <label htmlFor="file">Add Photos</label>
+            <input
+              type="file"
+              name="file"
+              id="file"
+              accept=".jpg, .png, .jpeg, .gif"
+              onChange={handleChange}
+            />
+            {file && (
+              <img
+                src={URL.createObjectURL(file)}
+                alt="user uploaded"
+                height="300"
+              />
+            )}
+            <input type="submit" value="Post" />
+          </form>
+        </div>
+      </div>,
+      portal
+    );
+  } else {
+    return <></>;
+  }
 };
 
 export default Input;
