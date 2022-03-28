@@ -31,6 +31,17 @@ const Input: FC<Iprops> = ({ close, refetch, post }) => {
   const [formState, setFormState] = useState(initialFormState);
   const { body, file } = formState;
 
+  const author = user;
+  const reactions = {
+    angry: [],
+    care: [],
+    love: [],
+    haha: [],
+    wow: [],
+    sad: [],
+    like: [],
+  };
+
   // local state for image file converted to base64 string
   const [image, setImage] = useState("");
 
@@ -62,45 +73,29 @@ const Input: FC<Iprops> = ({ close, refetch, post }) => {
 
     // if new post, api saves post in database
     try {
-      if (user && !post) {
+      if (author && !post) {
         const response = await api.createPost({
-          author: user,
+          author,
           body,
           image: imageUrl,
           date: Date.now(),
           comments: [],
-          reactions: {
-            angry: [],
-            care: [],
-            love: [],
-            haha: [],
-            wow: [],
-            sad: [],
-            like: [],
-          },
+          reactions,
         });
         console.log(response);
       }
 
       // if new comment api saves comment in database
-      if (user && post) {
+      if (author && post) {
         const response = await api.updatePost(post._id, {
           comments: [
             ...post.comments,
             {
-              author: user,
+              author,
               body,
               image: imageUrl,
               date: Date.now(),
-              reactions: {
-                angry: [],
-                care: [],
-                love: [],
-                haha: [],
-                wow: [],
-                sad: [],
-                like: [],
-              },
+              reactions,
             },
           ],
         });

@@ -26,6 +26,7 @@ import ReactionChooser from "../ReactionChooser/ReactionChooser";
 // styles
 import "./Post.scss";
 import ChooseModal from "../ChooseModal/ChooseModal";
+import CommentBox from "../CommentBox/CommentBox";
 
 interface Iprops {
   post: Ipost;
@@ -132,11 +133,7 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
       <p className="post-author">{`${firstName} ${lastName}`}</p>
       <p className="post-body">{body}</p>
       {image && <img src={image} alt="user submitted" className="post-img" />}
-      <div className="comments">
-        {comments.map((comment, i) => (
-          <Comment key={`${_id}comment${i}`} comment={comment} />
-        ))}
-      </div>
+      <CommentBox comments={comments} id={_id} />
 
       {/* displays the reaction icon and adds a tooltip with the names of all the users that reacted that way if there is at least one reaction of that type */}
       <div className="reactions">

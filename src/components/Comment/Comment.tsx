@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { Icomment } from "../../interfaces/post";
-import { Iuser } from "../../interfaces/user";
+// styles
+import "./Comment.scss";
 
 interface Iprops {
   comment: Icomment;
