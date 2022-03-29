@@ -19,6 +19,7 @@ const Home = () => {
 
   // get user from redux store
   const { user, token } = useAppSelector((state) => state.auth);
+  
   // get posts from redux api call
   const { data, error, refetch } = useGetAllPostsQuery("");
   if (error) console.log(error);

@@ -5,6 +5,7 @@ import Home from "./components/Home/Home";
 import Login from "./components/Login/Login";
 import Logout from "./components/Logout/Logout";
 import NavBar from "./components/NavBar/NavBar";
+import Profile from "./components/Profile/Profile";
 
 const Router = () => {
   return (
@@ -14,6 +15,7 @@ const Router = () => {
         <Route path="/" element={<Home />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<h1>404 not found</h1>} />
       </Routes>
     </BrowserRouter>

@@ -21,7 +21,7 @@ const CommentBox: FC<Iprops> = ({ id, comments }) => {
     <div className="comment-box">
       {comments.length > 1 && (
         <button onClick={() => setShowAllComments(!showAllComments)}>
-          <span>{showAllComments ? "See less" : "All comments"}</span>
+          <span>{showAllComments ? "See less" : "See all comments"}</span>
           <FontAwesomeIcon icon={faCaretDown} />
         </button>
       )}
