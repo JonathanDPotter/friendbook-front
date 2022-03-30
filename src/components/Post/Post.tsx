@@ -27,6 +27,7 @@ import ReactionChooser from "../ReactionChooser/ReactionChooser";
 import "./Post.scss";
 import ChooseModal from "../ChooseModal/ChooseModal";
 import CommentBox from "../CommentBox/CommentBox";
+import { Navigate, useNavigate } from "react-router-dom";
 
 interface Iprops {
   post: Ipost;
@@ -34,6 +35,8 @@ interface Iprops {
 }
 
 const Post: FC<Iprops> = ({ post, refetch }) => {
+  const navigate = useNavigate();
+
   // get current user from redux
   const { user } = useAppSelector((state) => state.auth);
   // destructure variables from post prop
@@ -111,6 +114,10 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
     refetch();
   };
 
+  const openProfile = () => {
+    navigate(`/profile?id=${author._id}`);
+  };
+
   useEffect(() => {
     if (user && reactions) {
       if (
@@ -129,6 +136,7 @@ const Post: FC<Iprops> = ({ post, refetch }) => {
         src={author.image}
         alt={`avatar for ${firstName} ${lastName}`}
         className="avatar"
+        onClick={openProfile}
       />
       <p className="post-author">{`${firstName} ${lastName}`}</p>
       <p className="post-body">{body}</p>

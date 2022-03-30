@@ -39,6 +39,17 @@ const uploadImg = async (image: string) => {
   return response.data;
 };
 
+// user routes
+const getUserById = async (_id: string) => {
+  const response = await axios.get(`${apiBaseURL}/api/users/${_id}`);
+  return response.data;
+};
+
+const updateUser = async (id: string, update: any) => {
+  const response = await axios.put(`${apiBaseURL}/api/users/${id}`, update);
+  return response.data;
+};
+
 const api = {
   register,
   login,
@@ -47,6 +58,8 @@ const api = {
   updatePost,
   deletePost,
   uploadImg,
+  getUserById,
+  updateUser,
 };
 
 export default api;
