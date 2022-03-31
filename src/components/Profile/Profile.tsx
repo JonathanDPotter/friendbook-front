@@ -4,6 +4,7 @@ import api from "../../api";
 import { Iuser } from "../../interfaces/user";
 // utils
 import { useAppSelector } from "../../store/hooks";
+import BioModal from "../BioModal/BioModal";
 import ChooseAvatarModal from "../ChooseAvatarModal/ChooseAvatarModal";
 // styles
 import "./Profile.scss";
@@ -16,6 +17,7 @@ const Profile = () => {
   const [id, setId] = useState("");
   const [ownProfile, setOwnProfile] = useState(false);
   const [showAvatarModal, setShowAvatarModal] = useState(false);
+  const [showBioModal, setShowBioModal] = useState(false);
 
   // get current user from redux state
   const { user } = useAppSelector((state) => state.auth);
@@ -75,14 +77,30 @@ const Profile = () => {
           </span>
         </div>
         <div className="bio">
-          <h2>Bio:</h2>
-          <p></p>
+          <h3>Bio:</h3>
+          <p>{chosenUser.bio}</p>
+          {ownProfile && (
+            <button onClick={() => setShowBioModal(true)}>update bio</button>
+          )}
         </div>
         <button onClick={() => navigate("/")}>Home</button>
         {showAvatarModal && (
           <ChooseAvatarModal
-            close={() => setShowAvatarModal(false)}
+            close={() => {
+              setShowAvatarModal(false);
+              navigate(0);
+            }}
             id={chosenUser._id}
+          />
+        )}
+        {showBioModal && (
+          <BioModal
+            id={chosenUser._id}
+            currentBio={chosenUser.bio}
+            close={() => {
+              setShowBioModal(false);
+              navigate(0);
+            }}
           />
         )}
       </div>

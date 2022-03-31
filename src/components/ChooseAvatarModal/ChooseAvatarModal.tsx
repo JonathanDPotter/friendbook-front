@@ -70,6 +70,7 @@ const ChooseAvatarModal: FC<Iprops> = ({ id, close }) => {
               />
             </div>
             <button type="submit">Submit</button>
+            <button onClick={close}>Cancel</button>
           </form>
           {file && (
             <img

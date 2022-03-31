@@ -7,6 +7,7 @@ export interface Iuser extends Document {
   password: string;
   gender: string;
   image: string;
+  bio: string;
 }
 
 export interface InewUser {

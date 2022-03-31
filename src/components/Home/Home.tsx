@@ -33,10 +33,10 @@ const Home = () => {
   };
 
   useEffect(() => {
-    // navigate to login if there is no user in the store
+    // navigate to login if there is no user in the store or token has expired
     if (!user) navigate("/login");
     if (token) checkValidation();
-  }, [user, token]);
+  }, []);
 
   return (
     <div className="home page">

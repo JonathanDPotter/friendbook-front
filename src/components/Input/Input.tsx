@@ -4,8 +4,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 // utils
 import { useAppSelector } from "../../store/hooks";
+import { useGetAllUsersQuery } from "../../store/userApiSlice";
 import api from "../../api";
+// interfaces
 import { Ipost } from "../../interfaces/post";
+import { Iuser } from "../../interfaces/user";
 // styles
 import "./Input.scss";
 
@@ -31,7 +34,6 @@ const Input: FC<Iprops> = ({ close, refetch, post }) => {
   const [formState, setFormState] = useState(initialFormState);
   const { body, file } = formState;
 
-  const author = user;
   const reactions = {
     angry: [],
     care: [],
@@ -44,6 +46,25 @@ const Input: FC<Iprops> = ({ close, refetch, post }) => {
 
   // local state for image file converted to base64 string
   const [image, setImage] = useState("");
+
+  // local state for user
+  const [fullUser, setFullUser] = useState<Iuser | null>(null);
+
+  // get users from redux api call
+  const { data, error } = useGetAllUsersQuery("");
+  if (error) console.log(error);
+
+  // get full user record for user
+  const getFullUser = async () => {
+    if (data && user) {
+      const response = await data.users.filter(
+        (userRec: Iuser) => userRec._id === user._id
+      );
+      setFullUser(response[0]);
+    }
+  };
+
+  !fullUser && getFullUser();
 
   // change and submit handlers for form
   const handleChange = (event: FormEvent<HTMLInputElement>) => {
@@ -73,9 +94,9 @@ const Input: FC<Iprops> = ({ close, refetch, post }) => {
 
     // if new post, api saves post in database
     try {
-      if (author && !post) {
+      if (fullUser && !post) {
         const response = await api.createPost({
-          author,
+          author: fullUser._id,
           body,
           image: imageUrl,
           date: Date.now(),
@@ -86,12 +107,12 @@ const Input: FC<Iprops> = ({ close, refetch, post }) => {
       }
 
       // if new comment api saves comment in database
-      if (author && post) {
+      if (fullUser && post) {
         const response = await api.updatePost(post._id, {
           comments: [
             ...post.comments,
             {
-              author,
+              author: fullUser._id,
               body,
               image: imageUrl,
               date: Date.now(),
@@ -126,11 +147,13 @@ const Input: FC<Iprops> = ({ close, refetch, post }) => {
       <div className="input-back">
         <div className="input-card">
           <h1>Create post</h1>
-          <button onClick={close}>{<FontAwesomeIcon icon={faX} />}</button>
-          <img src={user ? user.image : ""} alt="user avatar" />
-          <h2>
-            {user?.firstName} {user?.lastName}
-          </h2>
+          <button onClick={close}>
+            {<FontAwesomeIcon icon={faX} />}
+          </button>
+          <img src={fullUser ? fullUser.image : ""} alt="user avatar" />
+          <span>
+            {fullUser?.firstName} {fullUser?.lastName}
+          </span>
           <form onSubmit={handleSubmit}>
             <input
               type="text"

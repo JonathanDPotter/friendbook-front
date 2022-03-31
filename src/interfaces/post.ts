@@ -23,7 +23,7 @@ export interface Ireactions {
 
 export interface Icomment {
   id: string;
-  author: Iuser;
+  author: string;
   date: number;
   body: string;
   image: string;
@@ -31,7 +31,7 @@ export interface Icomment {
 }
 
 export interface Ipost extends Document {
-  author: Iuser;
+  author: string;
   date: number;
   body: string;
   image?: string;
@@ -40,7 +40,7 @@ export interface Ipost extends Document {
 }
 
 export interface InewPost {
-  author: Iuser;
+  author: string;
   date: number;
   body: string;
   image: string;
